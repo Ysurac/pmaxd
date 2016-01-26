@@ -16,7 +16,7 @@
 #include <libconfig.h> 
 #include <netinet/in.h>
 
-#include <xPL.h>
+#include "../xPL4Linux/xPL.h"
 
 static xPL_ServicePtr pmaxdService = NULL;
 static xPL_MessagePtr pmaxdTrigMessage = NULL;
@@ -356,7 +356,7 @@ int main(int argc, char **argv) {
   cf = &cfg;
   config_init(cf);
   
-  if (!config_read_file(cf, "./pmaxd.conf")) {
+  if (!config_read_file(cf, "/etc/pmaxd.conf")) {
             fprintf(stderr, "%s:%d - %s\n",
                 config_error_file(cf),
                 config_error_line(cf),

@@ -1,11 +1,13 @@
 #include <stdio.h>
-//#include <stdlib.h>
+#include <string.h>
+#include <stdlib.h>
 #include <libconfig.h> 
 #include <xPL.h>
 #include <stdarg.h>
-//#include <errno.h>
+#include <errno.h>
 #include <syslog.h>
-
+#include <unistd.h>
+#include <time.h>
 #include <sys/reboot.h>
 #include "debug.h" 
 

@@ -203,9 +203,10 @@ int main(void)
   
 //	char *data;
 	long m,n;
+/*
 	printf("%s%c%c\n" ,
 	"Content-Type:text/html;charset=iso-8859-1",13,10);
-
+  */
   xPL_setBroadcastInterface("lo");
 	
   xPL_initialize(xPL_getParsedConnectionType());
@@ -221,12 +222,14 @@ int main(void)
 //  for (j=0;j<10;j++)
 //  {
   /* Create a message to send */
+  /*
   xplMessage = xPL_createBroadcastMessage(webgateway, xPL_MESSAGE_COMMAND);
   xPL_setSchema(xplMessage, "security", "request");
   xPL_setMessageNamedValue(xplMessage, "request", "zonelist");	
 
   xPL_sendMessage(xplMessage);
 //  printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+*/
   int i;
   
   
@@ -243,8 +246,9 @@ int main(void)
     xPL_processMessages(0);
   }
   
-  
+/*  
   strcpy(tpzonelist,zonelist);
+
   char * element;
 //  printf("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\n");
 //  printf("zone: %d, %s\n",nbzone,zonelist);
@@ -276,16 +280,20 @@ int main(void)
     xPL_processMessages(0);
     element = strtok (NULL, ",");  
   }
+  
 //  printf("zonelist: %s\n",zonelist);
   for (i=0;i<10;i++)
   { 
   usleep(15000);
   xPL_processMessages(0);
   }      
-  printf("{ \"status\":\"%s\",\"pmaxstatus\":\"%s\",\"readytoarm\":\"%s\",\"sensor\":[",pmaxSystem.status,pmaxSystem.pmaxstatus,pmaxSystem.readytoarm);
+ */
+//  printf("{ \"status\":\"%s\",\"pmaxstatus\":\"%s\",\"readytoarm\":\"%s\",\"sensor\":[",pmaxSystem.status,pmaxSystem.pmaxstatus,pmaxSystem.readytoarm);
+  printf("%s",pmaxSystem.status);
  
 // strcpy(tpzonelist,zonelist);
 //  element = strtok (tpzonelist,",");
+/*
   i=0;
 //  while (element != NULL)
   char tmpbuff[200];
@@ -295,8 +303,7 @@ int main(void)
   {
 //    printf ("%s\n",element);
     if ( strcmp(pmaxSystem.sensor[i].id,"")!=0 ) { 
-    sprintf(tmpbuff,"{\"id\":\"%i\",\"zone\":\"%s\",\"type\":\"%s\",\"alert\":\"%s\",\"armed\":\"%s\",\"tamper\":\"%s\",\"low-battery\":\"%s\",\"alarm\":\"%s\"},",
-    i,
+    sprintf(tmpbuff,"{\"zone\":\"%s\",\"type\":\"%s\",\"alert\":\"%s\",\"armed\":\"%s\",\"tamper\":\"%s\",\"low-battery\":\"%s\",\"alarm\":\"%s\"},",
     pmaxSystem.sensor[i].id,
     pmaxSystem.sensor[i].type,
     pmaxSystem.sensor[i].alert,
@@ -316,7 +323,7 @@ int main(void)
   printf("]}"); 
   nbzone=0;
   zonelist[0]=0;
-
+*/
 //}  
   
 	return 0;  

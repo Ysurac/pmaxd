@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <libconfig.h> 
 #include <stdarg.h>
-
+#include "mysql/mysql.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -37,7 +37,7 @@ struct SystemStatus pmaxSystem;
 int nbzone=0;
 char zonelist[256];
 char tpzonelist[256];
-
+MYSQL *mysql=NULL;
 /*
 char * xplListAt(char* element,char* xpllist, int i)
 {
@@ -69,6 +69,20 @@ char * xplListAt(char* element,char* xpllist, int i)
   if (xpllist==NULL) element[strlen(element)-1]=0; 
   return element;
 } */
+
+int init_db(void) {
+    if ((mysql=mysql_init(mysql)) == NULL) {
+        printf("Failed to initiate MySQL connection");
+        return -1;
+    }
+    mysql_options(mysql,MYSQL_READ_DEFAULT_GROUP,"option");
+    if(mysql_real_connect(mysql,"localhost","alarm","alarm","alarm",0,NULL,0) == NULL) {
+        printf("Can not open database");
+        mysql_close(mysql);
+        return -1;
+    }
+}
+
 
 int XPLlistLength(char* xpllist)  {
   if (xpllist==NULL) return 0;
@@ -182,6 +196,7 @@ void webgatewayMessageHandler(xPL_ServicePtr theService, xPL_MessagePtr theMessa
 int main(void)
 //int main(int argc, char **argv)
 {
+  init_db();
   pmaxSystem.status[0]=0;
   pmaxSystem.pmaxstatus[0]=0;
   pmaxSystem.readytoarm[0]=0;
@@ -203,8 +218,8 @@ int main(void)
   
 //	char *data;
 	long m,n;
-	printf("%s%c%c\n" ,
-	"Content-Type:text/html;charset=iso-8859-1",13,10);
+//	printf("%s%c%c\n" ,
+//	"Content-Type:text/html;charset=iso-8859-1",13,10);
 
   xPL_setBroadcastInterface("lo");
 	
@@ -282,8 +297,10 @@ int main(void)
   usleep(15000);
   xPL_processMessages(0);
   }      
+  char sql[2000];
+  sprintf(sql,"insert into alarm_status (status, pmaxstatus, readytoarm) VALUES ('%s','%s','%s')",pmaxSystem.status,pmaxSystem.pmaxstatus,pmaxSystem.readytoarm);
   printf("{ \"status\":\"%s\",\"pmaxstatus\":\"%s\",\"readytoarm\":\"%s\",\"sensor\":[",pmaxSystem.status,pmaxSystem.pmaxstatus,pmaxSystem.readytoarm);
- 
+  if (mysql_query(mysql,sql)) printf("%s \n",sql);
 // strcpy(tpzonelist,zonelist);
 //  element = strtok (tpzonelist,",");
   i=0;
@@ -295,8 +312,10 @@ int main(void)
   {
 //    printf ("%s\n",element);
     if ( strcmp(pmaxSystem.sensor[i].id,"")!=0 ) { 
-    sprintf(tmpbuff,"{\"id\":\"%i\",\"zone\":\"%s\",\"type\":\"%s\",\"alert\":\"%s\",\"armed\":\"%s\",\"tamper\":\"%s\",\"low-battery\":\"%s\",\"alarm\":\"%s\"},",
-    i,
+    sprintf(sql,"insert into zone_status (name,type,alert,armed,tampered,low_battery,alarmed) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", pmaxSystem.sensor[i].id,pmaxSystem.sensor[i].type,pmaxSystem.sensor[i].alert,pmaxSystem.sensor[i].armed,pmaxSystem.sensor[i].tampered,pmaxSystem.sensor[i].lowbattery,pmaxSystem.sensor[i].alarmed);
+    if (mysql_query(mysql,sql)) printf("%s \n",sql);
+
+    sprintf(tmpbuff,"{\"zone\":\"%s\",\"type\":\"%s\",\"alert\":\"%s\",\"armed\":\"%s\",\"tamper\":\"%s\",\"low-battery\":\"%s\",\"alarm\":\"%s\"},",
     pmaxSystem.sensor[i].id,
     pmaxSystem.sensor[i].type,
     pmaxSystem.sensor[i].alert,
@@ -318,8 +337,8 @@ int main(void)
   zonelist[0]=0;
 
 //}  
-  
-	return 0;  
+  mysql_close(mysql);
+  return 0;
 }       
 
   

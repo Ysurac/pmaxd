@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include <xPL.h>
 
 static xPL_ServicePtr webgateway = NULL;
@@ -230,6 +230,7 @@ int main(void)
   findVarInURL(varcontent,data,"xplpacket");
   unencode(varcontent); 
   stripSpace(varcontent);
+  xPL_setBroadcastInterface("lo");
 	
   xPL_initialize(xPL_getParsedConnectionType());
   webgateway = xPL_createService("viknet", "webgateway", "default");  
