@@ -296,11 +296,12 @@ void PmaxStatusUpdatePanel(struct PlinkBuffer  * Buff)
 	tpbuff[0]=0;
 
 	// system status changed?
-	if (prev_status == (short) *(Buff->buffer + 4)) {
+/*	if (prev_status == (short) *(Buff->buffer + 4)) {
 		sprintf(tpbuff, "System status: heart beat");
 		DEBUG(LOG_INFO,"%s", tpbuff);
 		return;
 	}
+*/
 	prev_status = (short) *(Buff->buffer + 4);
 
 	// system status
