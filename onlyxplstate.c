@@ -289,7 +289,7 @@ int main(void)
   }      
  */
 //  printf("{ \"status\":\"%s\",\"pmaxstatus\":\"%s\",\"readytoarm\":\"%s\",\"sensor\":[",pmaxSystem.status,pmaxSystem.pmaxstatus,pmaxSystem.readytoarm);
-  printf("%s",pmaxSystem.status);
+  printf("%s",pmaxSystem.pmaxstatus);
  
 // strcpy(tpzonelist,zonelist);
 //  element = strtok (tpzonelist,",");
